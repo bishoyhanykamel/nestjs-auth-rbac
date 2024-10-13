@@ -1,4 +1,4 @@
-import { Body, Controller, DefaultValuePipe, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 
@@ -9,6 +9,7 @@ export class UsersController {
   ) { }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   getUsers(@Query('email', new DefaultValuePipe('')) email: string) {
     if (email.length == 0)
       return this.usersService.getAll();
@@ -17,6 +18,7 @@ export class UsersController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }

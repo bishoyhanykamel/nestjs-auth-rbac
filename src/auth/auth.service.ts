@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpCode, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { HashingProvider } from './providers/hashing.provider';
@@ -24,6 +24,7 @@ export class AuthService {
     return this.userService.createUser(createUserDto);
   }
 
+  @HttpCode(HttpStatus.OK)
   async loginUser(loginUserDto: LoginUserDto) {
     let user : User[] | User = await this.userService.getUserByEmail(loginUserDto.email);
     if (user.length != 1)
