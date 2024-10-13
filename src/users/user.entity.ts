@@ -8,7 +8,8 @@ export class User {
   @Column({
     type: 'varchar',
     length: 120,
-    nullable: false
+    nullable: false,
+    unique: true
   })
   email: string;
 
