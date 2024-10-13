@@ -11,8 +11,7 @@ import { BcryptProvider } from './providers/bcrypt.provider';
     {
       provide: HashingProvider,
       useClass: BcryptProvider
-    },
-    BcryptProvider
+    }
   ],
 })
 export class AuthModule {}
