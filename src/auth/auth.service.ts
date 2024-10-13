@@ -13,31 +13,22 @@ export class AuthService {
   ) { }
 
   async registerUser(createUserDto: CreateUserDto) {
-    // 1. check if user already exists
     const user = await this.userService.getUserByEmail(createUserDto.email);
     if (user.length >= 1)
       throw new BadRequestException('This email is already registered.');
-    // 2. hash password
     const hashedPassword = await this.hashingProvider.hashPassword(createUserDto.password);
-    // 3. store password
     createUserDto = {
       ...createUserDto,
       password: hashedPassword
     }
-    // 4. create user
     return this.userService.createUser(createUserDto);
-    // 5. generate JWT
   }
 
   async loginUser(loginUserDto: LoginUserDto) {
-    // 1. check if user already exists
     let user : User[] | User = await this.userService.getUserByEmail(loginUserDto.email);
     if (user.length != 1)
       throw new BadRequestException('Invalid email input.');
-    // 2. load user
     user = user[0];
-    // 3. compare hashed passwords
     return await this.hashingProvider.comparePasswords(loginUserDto.password, user.password);
-    // 4. generate JWT
   }
 }
