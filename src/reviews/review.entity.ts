@@ -24,4 +24,10 @@ export class Review {
     nullable: false
   })
   rating: number;
+
+  @Column({
+    type: 'number',
+    nullable: false,
+  })
+  bookId: number;
 }
