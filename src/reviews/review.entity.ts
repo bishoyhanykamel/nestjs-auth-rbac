@@ -26,7 +26,7 @@ export class Review {
   rating: number;
 
   @Column({
-    type: 'number',
+    type: 'int',
     nullable: false,
   })
   bookId: number;
