@@ -1,5 +1,6 @@
 ### Get all books
 GET http://localhost:3000/books
+Authorization: Bearer token
 
 
 ### get book by id

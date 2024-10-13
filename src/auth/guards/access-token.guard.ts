@@ -30,7 +30,6 @@ export class AccessTokenGuard implements CanActivate {
       });
 
       request[REQUEST_USER_KEY] = payload;
-      console.log(payload);
     } catch (err) {
       throw new UnauthorizedException('Malformed token.');
     }

@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dtos/create-book.dto';
 import { UpdateBookDto } from './dtos/update-book.dto';
+import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 
 @Controller('books')
 export class BooksController {
@@ -11,6 +12,7 @@ export class BooksController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AccessTokenGuard)
   getAllBooks() {
     return this.booksService.getAllBooks();
   }
