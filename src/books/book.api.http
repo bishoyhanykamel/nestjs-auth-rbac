@@ -18,7 +18,7 @@ Content-Type: application/json
 
 
 ### delete book by id
-DELETE http://localhost:3000/books/1
+DELETE http://localhost:3000/books/2
 
 
 ### update book by id
