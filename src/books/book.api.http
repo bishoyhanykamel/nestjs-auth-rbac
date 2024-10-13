@@ -27,5 +27,5 @@ Content-Type: application/json
 
 {
   "title": "updated title",
-  "author": "updated author",
+  "author": "updated author"
 }

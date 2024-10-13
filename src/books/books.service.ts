@@ -39,7 +39,7 @@ export class BooksService {
     if (existingBook.length <= 0)
       throw new BadRequestException('Book does not exist');
 
-    return await this.bookRepo.update({ id }, { ...existingBook, ...updateBookDto });
+    return await this.bookRepo.update({ id }, updateBookDto);
   }
 
   async deleteBookById(id: number) {

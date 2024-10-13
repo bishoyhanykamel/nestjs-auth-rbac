@@ -24,5 +24,5 @@ export class Book {
     length: 120,
     nullable: true,
   })
-  description: string;
+  description?: string;
 }
