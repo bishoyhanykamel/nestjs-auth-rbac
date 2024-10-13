@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './review.entity';
 import { Repository } from 'typeorm';
@@ -12,21 +12,47 @@ export class ReviewsService {
   ) { }
 
   async getAllReviews() {
-    const reviews = await this.reviewsRepo.find();
+    let reviews = undefined;
+    try {
+      reviews = await this.reviewsRepo.find();
+    } catch (err) {
+      throw new InternalServerErrorException('Could not connect to database.');
+    }
+    if (reviews == undefined)
+      throw new InternalServerErrorException('Could not load reviews');
     return reviews;
   }
 
   async getReviewById(id: number) {
-    const review = await this.reviewsRepo.find({
-      where: {
-        id
-      }
-    });
+    let review = undefined;
+    try {
+      review = await this.reviewsRepo.find({
+        where: {
+          id
+        }
+      });
+    } catch (err) {
+      throw new InternalServerErrorException('Could not connect to database.');
+    }
+    if (review == undefined)
+      throw new InternalServerErrorException('Could not load review.');
+
+    if (review.length <= 0)
+      throw new NotFoundException('Review does not exist.');
+
     return review;
   }
 
   async createReview(createReviewDto: CreateReviewDto) {
-    const createdReview = this.reviewsRepo.create(createReviewDto);
+    let createdReview = undefined;
+    try {
+      createdReview = this.reviewsRepo.create(createReviewDto);
+    } catch (err) {
+      throw new InternalServerErrorException('Could not connect to database.');
+    }
+    if (createdReview == undefined)
+      throw new InternalServerErrorException('Could not load create review.');
+
     return await this.reviewsRepo.save(createdReview);
   }
 
