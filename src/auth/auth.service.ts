@@ -27,7 +27,9 @@ export class AuthService {
       ...createUserDto,
       password: hashedPassword
     }
-    return this.userService.createUser(createUserDto);
+    const createdUser = await this.userService.createUser(createUserDto);
+    const accessToken = await this.generateAccessToken(createdUser.id, createdUser.email);
+    return { accessToken };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -41,18 +43,21 @@ export class AuthService {
     if (!isAuthenticated)
       throw new UnauthorizedException('Incorrect email or password!');
 
-    const accessToken = await this.jwtService.signAsync(
-      {
-        sub: user.id,
-        email: user.email
-      },
+    const accessToken = await this.generateAccessToken(user.id, user.email);
+
+    return { accessToken };
+  }
+
+  private async generateAccessToken(id: number, email: string): Promise<string> {
+    return await this.jwtService.signAsync({
+      sub: id,
+      email: email
+    },
       {
         secret: this.jwtConfiguration.secret,
         audience: this.jwtConfiguration.audience,
         expiresIn: this.jwtConfiguration.expireAt,
         issuer: this.jwtConfiguration.issuer
-      });
-
-    return { accessToken };
+      })
   }
 }
