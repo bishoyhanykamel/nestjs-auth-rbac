@@ -1,15 +1,21 @@
-import { BadRequestException, HttpCode, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpCode, HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { HashingProvider } from './providers/hashing.provider';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { User } from 'src/users/user.entity';
+import { JwtService } from '@nestjs/jwt';
+import jwtConfig from 'src/config/jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    private readonly hashingProvider: HashingProvider
+    private readonly hashingProvider: HashingProvider,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>
   ) { }
 
   async registerUser(createUserDto: CreateUserDto) {
@@ -26,10 +32,27 @@ export class AuthService {
 
   @HttpCode(HttpStatus.OK)
   async loginUser(loginUserDto: LoginUserDto) {
-    let user : User[] | User = await this.userService.getUserByEmail(loginUserDto.email);
+    let user: User[] | User = await this.userService.getUserByEmail(loginUserDto.email);
     if (user.length != 1)
       throw new BadRequestException('Invalid email input.');
     user = user[0];
-    return await this.hashingProvider.comparePasswords(loginUserDto.password, user.password);
+    const isAuthenticated = await this.hashingProvider.comparePasswords(loginUserDto.password, user.password);
+
+    if (!isAuthenticated)
+      throw new UnauthorizedException('Incorrect email or password!');
+
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email
+      },
+      {
+        secret: this.jwtConfiguration.secret,
+        audience: this.jwtConfiguration.audience,
+        expiresIn: this.jwtConfiguration.expireAt,
+        issuer: this.jwtConfiguration.issuer
+      });
+
+    return { accessToken };
   }
 }
