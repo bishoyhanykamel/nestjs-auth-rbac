@@ -1,0 +1,31 @@
+### Get all books
+GET http://localhost:3000/books
+
+
+### get book by id
+GET http://localhost:3000/books/1
+
+
+### create book
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "book title",
+  "author": "author2",
+  "description": "description"
+}
+
+
+### delete book by id
+DELETE http://localhost:3000/books/1
+
+
+### update book by id
+PATCH http://localhost:3000/books/1
+Content-Type: application/json
+
+{
+  "title": "updated title",
+  "author": "updated author",
+}
