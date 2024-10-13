@@ -1,0 +1,22 @@
+### get all reviews
+GET http://localhost:3000/reviews
+
+
+### get review by id
+GET http://localhost:3000/reviews/1
+
+
+### create review
+POST http://localhost:3000/reviews
+Content-Type: application/json
+
+{
+  "bookId": 1,
+  "title": "review-title",
+  "description": "description",
+  "rating": 1
+}
+
+
+### delete review
+DELETE http://localhost:3000/reviews/1

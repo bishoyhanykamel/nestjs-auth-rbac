@@ -20,7 +20,7 @@ export class Review {
   description: string;
 
   @Column({
-    type: 'decimal',
+    type: 'int',
     nullable: false
   })
   rating: number;
