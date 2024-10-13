@@ -12,7 +12,6 @@ export class BooksController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AccessTokenGuard)
   getAllBooks() {
     return this.booksService.getAllBooks();
   }
@@ -25,18 +24,21 @@ export class BooksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AccessTokenGuard)
   createBook(@Body() createBookDto: CreateBookDto) {
     return this.booksService.createBook(createBookDto);
   }
 
   @Patch('/:id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AccessTokenGuard)
   updateBookById(@Param('id', ParseIntPipe) id: number, @Body() updateBookDto: UpdateBookDto) {
     return this.booksService.updateBookById(id, updateBookDto);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AccessTokenGuard)
   deleteBookById(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.deleteBookById(id);
   }
